@@ -14,6 +14,19 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+// getting a single user
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    try {
+        const conn = await connect();
+        const users = await conn.query('SELECT * FROM users WHERE ID = ?', [id]);
+        return res.json(users[0]);
+    }
+    catch (e) {
+        console.log(e)
+    }
+};
 
-export default { getUsers};
+
+export default { getUsers, getUser};
 
