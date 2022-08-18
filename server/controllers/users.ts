@@ -13,3 +13,4 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
         console.log(e)
     }
 };
+export default { getUsers};
