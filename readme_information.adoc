@@ -317,3 +317,43 @@ https://www.codegrepper.com/code-examples/javascript/add+access-control-allow-or
 
 image::image-2022-08-20-12-12-06-309.png[width=700]
 
+=== Access HTTP headers values from a request
+https://flaviocopes.com/express-headers/
+
+You can access all the HTTP headers using the Request.headers property:
+
+ app.get('/', (req, res) => {
+ console.log(req.headers)
+ })
+
+Use the Request.header() method to access one individual request header’s value:
+
+ app.get('/', (req, res) => {
+ req.header('User-Agent')
+ })
+
+=== Change any HTTP header value for a response
+
+You can change any HTTP header value using Response.set():
+
+ res.set('Content-Type', 'text/html')
+
+There is a shortcut for the Content-Type header, however:
+
+ res.type('.html')
+ // => 'text/html'
+
+ res.type('html')
+ // => 'text/html'
+
+ res.type('json')
+ // => 'application/json'
+
+ res.type('application/json')
+ // => 'application/json'
+
+ res.type('png')
+ // => image/png:
+
+
+
