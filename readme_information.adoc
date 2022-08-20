@@ -1,0 +1,302 @@
+== PROJECT STRUCTURE (server)
+
+What would be a good project structure for a Node.js application?
+
+https://bytearcher.com/articles/node-project-structure/
+
+Small applications don't matter that much, but for larger apps with more complex logic, it's worth thinking
+about the project structure.
+
+One way to organize a project is to use three-layer architecture.
+
+=== Three-layer architecture
+
+The project is structured into three layers: API, Service and Integration layers.
+
+Each layer has a specific set of responsibilities that are clearly defined and easy to grasp.
+Each layer accesses the layer below it, never above it.
+Serving a request touches each layer starting from the top, traveling all the way down,
+and then resurfacing back to the topmost layer.
+
+
+=== API layer
+
+The API Layer is responsible for receiving the HTTP request and parsing the payload from it.
+This layer would then forward the payload removed of any HTTP-specific items to the following Service layer.
+
+Express.js lives only on this level. You'd have your main app.js that set up the server and individual route files.
+Route files define validations and call service layers, leaving all req and res objects behind.
+
+
+=== Service layer
+
+The Service Layer is responsible for performing business logic, i.e. making things happen.
+It's agnostic of any HTTP specific constructs, and the caller could as well as be a command-line application,
+a timer job or a test suite. Input is plain vanilla JavaScript objects instead of JSON.
+
+Services perform business logic. They validate inputs against business rules and call other services in the Service layer.
+If they need to talk to outside systems, they use the Integration layer to do that.
+
+
+=== Integration layer
+
+The code in the Integration Layer is responsible for performing I/O outside the process boundaries.
+It talks to databases and makes HTTP requests to 3rd party web APIs.
+
+Most of the contents in this layer would be higher abstraction clients.
+For example, a client handling the communication to a web API would accept vanilla objects as arguments
+and would hide the complexity of formulating an HTTP request payload and making the call.
+
+
+=== Clear responsibilities
+
+This division achieves separation of concerns. Each layer has a specific responsibility,
+and it translates well into a directory structure.
+
+image::images/image-2022-08-19-12-29-29-264.png[width=600]
+
+
+You could translate this architecture into a project structure by having a separate directory for each layer.
+
+image::images/image-2022-08-19-12-32-26-132.png[width=300]
+
+
+== NODE.JS
+
+Node.js is an open source cross-platform runtime environment written in JavaScript.
+It is built on Chrome’s V8 JavaScript engine, which parses and executes the JavaScript code.
+Node uses an event-driven, non-blocking I/O model, which makes it fast and lightweight.
+
+Node is *best suited* for building *software and applications* that *require real-time,
+synchronous interactions* such as chat apps and websites.
+Yet it also has other uses and benefits which make it popular among developers, as well, all contributing to its popularity.
+
+===  Why It Is Called Node
+
+It’s called Node because it is used to build simple single-process blocks called nodes.
+These nodes can be organized with good networking protocols for communication with each other
+and be scaled up to build large distributed programs.
+
+
+=== 3. Non-blocking in Node
+
+This is the main feature of Node. You need to understand how inout/output (I/O) operations
+(This includes HTTP requests, database operations and disk reads and writes) in Node are performed asynchronously,
+with the lines of code adhering to a non blocking pattern.
+The single thread of execution asks the runtime to perform an operation, providing a callback function
+and then moves on to do something else. When the operation has been completed, a message is enqueued
+along with the provided callback function.
+At some point in the future, the message is dequeued and the callback fired.
+
+* Give Node instructions (a function) to execute.
+    * Give the function some arguments.
+    * Give Node a callback with your function.
+    * Node will proceed to take instructions from other lines after yours.
+    * When your function has been computed, Node will call your callback with the result of the computation.
+
+
+=== 4.Concept of the Event Loop
+https://blog.carbonfive.com/the-javascript-event-loop-explained/
+
+Basically, there is a stack, a heap, and a queue. In a loop, the queue is polled for the next message
+and when a message is encountered, the callback for that message is executed.
+The decoupling of the caller from the response allows for the JavaScript runtime to do other things
+while waiting for your asynchronous operation to complete and their callbacks to fire.
+But where in memory do these callbacks live – and in what order are they executed?
+What causes them to be called? JavaScript runtimes contain a message queue which stores a list of messages to be processed
+and their associated callback functions. These messages are queued in response to external events
+(such as a mouse being clicked or receiving the response to an HTTP request) given a callback function has been provided.
+If, for example a user were to click a button and no callback function was provided –
+no message would have been enqueued. In a loop, the queue is polled for the next message
+(each poll referred to as a “tick”) and when a message is encountered, the callback for that message is executed.
+
+
+image::images/image-2022-08-19-15-29-17-481.png[width=600]
+
+The calling of this callback function serves as the initial frame in the call stack, and due to JavaScript being single-threaded,
+further message polling and processing is halted pending the return of all calls on the stack.
+Subsequent (synchronous) function calls add new call frames to the stack
+(for example, function init calls function changeColor).
+
+image::images/image-2022-08-19-15-32-33-614.png[width=400]
+
+
+
+== EXPRESS JS
+
+https://www.simplilearn.com/tutorials/nodejs-tutorial/what-is-express-js
+https://levelup.gitconnected.com/better-logs-for-expressjs-using-winston-and-morgan-with-typescript-1c31c1ab9342
+
+
+*Node JS is* a fast JavaScript *runtime* environment that we use *to build server-side applications*,
+but it does not know how to perform serving files, handling requests, and handling HTTP methods,
+so this is where express js comes in.
+
+*Express JS is a Node.js framework* designed to build API's web applications cross-platform mobile apps quickly
+and make node js easy
+
+=== What Is Express JS In Node JS?
+
+Express is a node js web application framework that provides broad features for building web and mobile applications.
+It is used to build a single page, multipage, and hybrid web application.
+
+It's a layer built on the top of the Node js that helps manage servers and routes.
+
+=== Why Express JS?
+
+* Express was created to make APIs and web applications with ease,
+    * It saves a lot of coding time almost by half
+    * makes web and mobile applications are efficient.
+    * It is written in javascript
+
+The reason behind creating an express framework for node js is:
+
+* Time-efficient
+    * Fast
+    * Economical
+    * Easy to learn
+    * Asynchronous
+
+Also Read: Node.js for Beginners: How to Get Started
+https://www.simplilearn.com/nodejs-for-beginners-article
+
+
+=== Features of Express JS
+
+* Fast Server-Side Development: The features of node js help express saving a lot of time.
+
+    * Middleware: is a request handler that has access to the application's request-response cycle.
+
+    * Routing: It refers to how an application's endpoint's URLs respond to client requests.
+
+    * Templating: It provides templating engines to build dynamic content on the web pages by creating HTML templates on the server.
+
+    * Debugging: Express makes it easier as it identifies the exact part where bugs are.
+
+
+=== Advantages of Using Express With Node.js
+
+* Express is Unopinionated, and we can customize it.
+    * For request handling, we can use Middleware.
+    * A single language is used for frontend and backend development.
+    * Express is fast to link it with databases like MySQL, MongoDB, etc.
+    * Express allows dynamic rendering of HTML Pages based on passing arguments to templates.
+
+
+=== Limitations of Express JS
+
+* Sometimes, there is no structural way to organize things, and the code becomes non-understandable.
+    * There are so many issues with callbacks.
+    * The error messages that will come are challenging to understand.
+
+=== Installation and the First Program
+
+To install Express JS on your system first you need to install node js
+then we will write a command to install express in the terminal.
+
+    npm install express
+
+The express js will be installed in your system.
+
+image::images/image-2022-08-19-14-36-35-236.png[width=400]
+(we print “Welcome To Simplilearn” on the server.)
+
+image::images/image-2022-08-19-14-38-59-834.png[width=400]
+
+== CORS
+https://stackabuse.com/handling-cors-with-node-js/
+
+=== What is CORS
+CORS is shorthand for *Cross-Origin Resource Sharing*.
+It is a mechanism to allow or restrict requested resources on a web server depend on where the HTTP request was initiated.
+
+This policy is used to secure a certain web server from access by other website or domain.
+For example, only the allowed domains will be able to access hosted files in a server such as a stylesheet, image, or a script.
+
+If you are currently on http://example.com/page1 and you are referring an image from http://image.com/myimage.jpg
+you won't be able to fetch that image unless http://image.com allows cross-origin sharing with http://example.com.
+
+There is an HTTP header called origin in each HTTP request. It defines from where the domain request has originated.
+We can use header information to restrict or allow resources from our web server to protect them.
+
+
+NOTE: By default requests from any other origins will be restricted by the browser.
+
+For example, while you are still in the development stage - if you are using a frontend library such as React,
+your front end application will be served on http://localhost:3000.
+Meanwhile, your Express server might be running on a different port such as http://localhost:2020.
+
+Because of this, you'll need to allow CORS between those servers.
+If you see this common error in your browser console. CORS restrictions could be the issue:
+
+image::images/image-2022-08-19-16-15-06-822.png[width=700]
+
+CORS is really useful when you're offering a public API and would like to control the access to certain resources
+and how people use them.
+
+Also, if you want to use your own API or files on a different web page you can simply configure CORS to allow that,
+while still blocking others out.
+
+==== EXERCISE:
+1. configure CORS with Express
+
+Start off with a fresh project.
+install the required modules. We'll be using express and the cors middleware:
+
+Then create an express web application with two routes
+
+Make a file, called index.js that acts as a web server, with a couple of request handlers, so you can run the app and the server:
+
+[start=2]
+2. Enable All CORS Requests
+
+If you want to enable CORS for all the request you can simply use the cors middleware before configuring your routes:
+
+ const express = require('express');
+ const cors = require('cors');
+
+ const app = express();
+
+ app.use(cors())
+
+ ......
+
+This will allow all the routes to be accessed anywhere on the web if that is what you need.
+For example, if our server is running on http://www.example.com and serves content such as images - we allow other domains,
+such as http://www.differentdomain.com to refer the content from http://www.example.com.
+
+[start=3]
+3. Enable CORS for a Single Route
+
+But if you need a certain route to be accessible and not other routes, you can configure cors in a certain route as a
+middleware instead of configuring it to the whole app:
+
+This will allow a certain route to be accessible by any domain.
+For example, if you try to send a fetch request to the / path from a different origin -
+it will be successful.
+
+But if you try to access any other path other than the root path this request will be blocked by the browser:
+
+[start=4]
+4. Configure CORS with Options
+
+You can also use the configuration options with CORS to customize this further.
+You can use configuration to allow a single domain or subdomains access, configure HTTP methods that are allowed
+such as GET and POST depending on your requirements.
+If you configure the domain name in the origin - the server will allow CORS from the configured domain.
+
+You can also configure allowed HTTP methods if you'd like:
+
+for example: A POST request will be blocked by the browser if only GET and PUT are supported:
+
+[start=5]
+5. Configuring Dynamic CORS Origins using a Function
+
+If configurations do not satisfy your requirements, you can create your function to customize CORS.
+
+[start=6]
+6. Loading List of Allowed Origins from as Data Source
+
+You can use also use a list of allowed domains from a database or using any backing data source to allow CORS:
+
+

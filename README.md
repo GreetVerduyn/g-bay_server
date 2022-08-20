@@ -14,6 +14,8 @@ Now I have to find out (again) how this is all working
 // mySQL
 
 https://medium.com/codex/building-a-rest-api-with-node-js-mysql-and-express-d55c090d171e
+How to build a REST API with Express and MySQL
+
 https://www.tabnine.com/code/javascript/functions/mysql/createPool
 
 
@@ -30,3 +32,5 @@ https://levelup.gitconnected.com/better-logs-for-expressjs-using-winston-and-mor
 
 // API standaard
 https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design
+
+https://medium.com/codex/building-a-rest-api-with-node-js-mysql-and-express-d55c090d171e
