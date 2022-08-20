@@ -237,7 +237,7 @@ and how people use them.
 Also, if you want to use your own API or files on a different web page you can simply configure CORS to allow that,
 while still blocking others out.
 
-==== EXERCISE:
+==== HOW TO?:
 1. configure CORS with Express
 
 Start off with a fresh project.
@@ -299,4 +299,21 @@ If configurations do not satisfy your requirements, you can create your function
 
 You can use also use a list of allowed domains from a database or using any backing data source to allow CORS:
 
+== HEADERS
+https://www.educative.io/answers/how-to-set-headers-in-request-in-nodejs
+
+A header node is a special node that is found at the beginning of the list.
+A list that contains this type of node, is called the header-linked list.
+This type of list is useful when information other than that found in each node is needed.
+For example, suppose there is an application in which the number of items in a list is often calculated.
+Usually, a list is always traversed to find the length of the list.
+However, if the current length is maintained in an additional header node that information can be easily obtained.
+
+We will use request.setHeader() to set header of our request. The header tells the server details
+about the request such as what type of data the client, user, or request wants in the response.
+
+
+https://www.codegrepper.com/code-examples/javascript/add+access-control-allow-origin+header+node+js
+
+image::image-2022-08-20-12-12-06-309.png[width=700]
 
