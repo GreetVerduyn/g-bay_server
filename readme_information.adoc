@@ -329,6 +329,439 @@ image::image-2022-08-23-12-13-19-792.png[]
 === 1.5 Hooks
 Hooks allows us to use state inside of functional components.
 
+First, we need to import the useState hook:
+
+ import React, { useState } from 'react';
+
+useState returns a pair, the current state value and a function, that lets you change the state.
+
+useState takes one argument, which is the initial value of the state.
+
+example 1:
+
+ function Hello() {
+ const [name, setName] = useState("David");
+
+  return <h1>Hello {name}.</h1>;
+ }
+
+ const el = <Hello />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+
+example 2:
+
+ function Counter() {
+ const [counter, setCounter] = useState(0);
+
+  function increment() {
+    setCounter(counter+1);
+  }
+  return <div>
+  <p>{counter}</p>
+  <button onClick={increment}>Increment</button>
+  </div>;
+ }
+
+ const el = <Counter />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+BEFORE HOOKS, the function looks like this;
+
+ class Counter extends React.Component {
+ state = {
+ counter: 0
+ }
+ increment = () => {
+ this.setState({counter: this.state.counter+1});
+ }
+ render() {
+ return <div>
+ <p>{this.state.counter}</p>
+ <button onClick={this.increment}>Increment</button>
+ </div>;
+ }
+ }
+ const el = <Counter />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+
+
+=== 1.6. Lifecycle Methods
+
+React provides special *lifecycle methods for class components*, which are called when components are mounted,
+updated or unmounted.
+
+* Mounting is the process when a component is rendered on the page.
+* Unmounting is the process when a component is removed from the page.
+
+==== 1.6.1 The *componentDidMount method* (only in Class Components)
+Is called when a component is rendered on the page.
+
+For example, we can use componentDidMount in our Counter app to set the initial value of the counter:
+
+ class Counter extends React.Component {
+ state = {
+ counter: 0
+ }
+ increment = () => {
+ this.setState({counter: this.state.counter+1});
+ }
+ componentDidMount() {
+ this.setState({counter: 42});
+ }
+ render() {
+ return <div>
+ <p>{this.state.counter}</p>
+ <button onClick={this.increment}>Increment</button>
+ </div>;
+ }
+ }
+
+ const el = <Counter />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+
+componentDidMount is typically used for populating the state inside of a component when it initially mounts to the DOM.
+
+==== 1.6.2. The *componentWillUnmount method* (only in Class Components)
+I similarly to the componentDidMount method, but the componentWillUnmount() lifecycle method is called right before
+the component is removed from the DOM.
+It can be used to free up resources taken by the component.
+
+
+==== 1.6.3. The *componentDidUpdate method* (only in Class Components)
+Is called when a component is updated in the DOM.
+
+We can, for example, alert the current counter value when it is incremented:
+
+ class Counter extends React.Component {
+  state = {
+    counter: 0
+  }
+  increment = () => {
+    this.setState({counter: this.state.counter+1});
+  }
+  componentDidUpdate() {
+    alert("Number of clicks: " + this.state.counter);           // shows an alertbox
+  }
+  render() {
+    return <div>
+    <p>{this.state.counter}</p>
+    <button onClick={this.increment}>Increment</button>
+    </div>;
+  }
+ }
+
+ const el = <Counter />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+==== 1.6.4. The *useEffect Hook* (only in Function Components)
+React provides a special Hook called useEffect to make lifecycle methods available in functional components.
+It combines the componentDidMount, componentDidUpdate, and componentWillUnmount methods into one.
+
+ function Counter() {
+ const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    alert("Number of clicks: " + counter);
+  });
+
+  function increment() {
+    setCounter(counter+1);
+  }
+  return <div>
+  <p>{counter}</p>
+  <button onClick={increment}>Increment</button>
+  </div>;
+ }
+
+ const el = <Counter />;
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+When you run the code, you'll notice that the alert dialog appears also during the first render. This is caused by the fact that, by default, useEffect runs both, after the first render and after every update.
+
+To call the method only when something changes, we can provide it a second argument:
+
+ useEffect(() => {
+  //do something
+ }, [count]);
+
+Now, the useEffect() method will run only if count changes.
+
+To mimic componentWillUnmount, useEffect may return a function that cleans up after it:
+
+ useEffect(() => {
+   // do something
+  return () => {
+    // cleanup
+  };
+ });
+
+NOTE: Just like with the useState hook, we need to import useEffect to be able to use it:
+import React, { useState, useEffect } from 'react';
+
+
+=== 1.7. Event Handling
+Handling events in React is very similar to handling events in the DOM.
+
+The only difference is that event names use camelCase syntax and the event handler needs to be passed in curly braces.
+
+For example, to handle the click event on a button:
+
+ <button onClick={handleClick}>My Button</button>
+
+Clicking the button will call the handleClick function of the component.
+
+ function Counter() {
+  const [counter, setCounter] = useState(0);
+
+  function increment() {
+    setCounter(counter+1);
+  }
+  return <div>
+  <p>{counter}</p>
+  <button onClick={increment}>Increment</button>
+  </div>;
+ }
+
+ const el = <Counter />;
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+OR IN A CLASS COMPONENT:
+
+ class Counter extends React.Component {
+ state = {
+ counter: 0
+ }
+
+ increment = () => {
+ this.setState({counter: this.state.counter+1});
+ }
+
+ render() {
+ return <div>
+ <p>{this.state.counter}</p>
+ <button onClick={this.increment}>Increment</button>
+ </div>;
+ }
+ }
+
+ const el = <Counter />;
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+
+
+=== 1.8. Handling User Input
+
+One of the common ways that users interact with web pages is through text fields.
+
+We can ** handle user input** in React using the *onChange event* of the text field.
+When the value of the text field changes, the event handler is called, updating the value of the field
+in the component's state. This way you always have the actual value of the text field in the state.
+
+example:
+
+ function Converter() {
+ const [km, setKm] = useState(0);
+
+  function handleChange(e) {
+    setKm(e.target.value);
+  }
+
+  function convert(km) {
+    return (km/1.609).toFixed(2);
+  }
+
+  return <div>
+  <input type="text" value={km} onChange={handleChange} />
+  <p> {km} km is {convert(km)} miles </p>
+  </div>;
+}
+
+ const el = <Converter />;
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+);
+
+Our Converter component includes a text field, which calls the handleChange function when its value changes.
+The handleChange function updates the state with the current value of the textfield, causing the component to re-render and show the corresponding miles value, which is calculated using the convert function.
+
+NOTE: The value of the text field is accessed via the e object, which represents the React event.
+It is passed to the event handler function as an argument and can be used to access the event object.
+
+
+=== 1.9. Forms
+Text fields are usually part of a form. React form elements keep their state and update it based on user input.
+This way you always have the data of your form at your disposal in the state.
+
+Example: a form that will add numbers every time the form is submitted and display the sum.
+The form contains an input field and a submit button:
+
+ function AddForm() {
+   const [sum, setSum] = useState(0);
+   const [num, setNum] = useState(0);
+
+  function handleChange(e) {
+     setNum(e.target.value);
+  }
+
+  function handleSubmit(e) {
+     setSum(sum + Number(num));
+     e.preventDefault();          // !!! see NOTE !!!
+  }
+
+   return <form onSubmit={handleSubmit}>
+   <input type="number" value={num} onChange={handleChange} />
+   <input type="submit" value="Add" />
+   <p> Sum is {sum} </p>
+   </form>;
+ }
+
+ const el = <AddForm />;
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+image::image-2022-08-23-15-42-45-639.png[]
+
+NOTE: The e.preventDefault(); statement prevents the default behavior of the form, which, by default, reloads the page when submitted. In JavaScript we would use return false; for that, but in React we need to call preventDefault().
+
+=== 1.10. Lists
+
+Web apps commonly contain repeating elements, such as lists or sections, where the same DOM element is repeated
+with a different data set.
+
+ function MyList(props) {
+ const arr = props.data;
+ const listItems = arr.map((val) =>       //NOTE 1
+ <li>{val}</li>
+ );
+ return <ul>{listItems}</ul>;
+ }
+
+ const arr = ["A", "B", "C"];              //array of strings
+ const el = <MyList data={arr} />;         //NOTE 2
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+image::image-2022-08-23-16-19-18-304.png[]
+
+NOTE 1 : In React, the map method is used to traverse and display a list of similar objects of a component.
+A map is not a feature of React. Instead, it is the standard JavaScript function that could be called on an array.
+The map() method creates a new array by calling a provided function on every element in the calling array
+
+NOTE 2:  We need to render a list <li> element for each item in the array.
+**We can define a MyList component and pass it the array as a prop using a custom data attribute**
+
+
+=== 1.11. Keys
+
+Each element in a list must have a key attribute.
+Keys act as a unique identity, identifying each element.
+Usually, these are IDs from your data, or can be auto-generated indexes.
+
+
+ function MyList(props) {
+ const arr = props.data;
+ const listItems = arr.map((val, index) =>
+ <li key={index}>{val}</li>
+ );
+ return <ul>{listItems}</ul>;
+ }
+
+ const arr = ["A", "B", "C"];
+ const el = <MyList data={arr} />;
+
+ ReactDOM.render(
+ el,
+ document.getElementById('root')
+ );
+
+=== 1.12. Sharing State
+
+Sometimes we need to share the state between the components.
+We can do that by lifting the state up to a parent component.
+This means that the parent component will hold the data that needs to be shared between the components.
+
+NOTE: Data can be passed from the parent to the child, but not from the child to the parent.
+React uses what is called unidirectional data flow, in other words, data only flows downward, so to speak.
+
+NOTE: props can be used to pass down not only state, but also functions, that may manipulate the state.
+This way, we are able to store the application state in the parent and allow its child components to use
+and manipulate the state.
+
+
+
+== 2. REDUX
+Redux was created to make state management predictable, providing a single state container and strict rules
+on how state can be changed.
+
+Redux is a small JavaScript library and can be used with any front-end framework, such as React, Angular, jQuery.
+
+It employs the "single source of truth" pattern.
+In short, single source of truth just refers to relocating the application state and all associated logic o
+utside of the application, allowing ANY component to access the data it needs.
+
+
+NOTE: Having a single state container makes it easier to manage the state of your application, as you can access and change the data from any component that needs it, without having to pass down the data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 == NODE.JS
