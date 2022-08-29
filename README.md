@@ -34,3 +34,18 @@ https://levelup.gitconnected.com/better-logs-for-expressjs-using-winston-and-mor
 https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design
 
 https://medium.com/codex/building-a-rest-api-with-node-js-mysql-and-express-d55c090d171e
+
+
+
+
+// triggers deleteProduct() from 'Database' model  TO TEST
+
+app.delete("/api/product/id/:id", async (req, res) => {
+try{
+const id = req.params.id;
+const result = await Database.Database.deleteProduct(id);
+res.status(200).send(result)
+}catch (error){
+res.status(500).send(error)
+}
+});

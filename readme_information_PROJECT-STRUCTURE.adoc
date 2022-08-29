@@ -1,0 +1,62 @@
+
+== PROJECT STRUCTURE (server)
+
+What would be a good project structure for a Node.js application?
+
+https://bytearcher.com/articles/node-project-structure/
+
+Small applications don't matter that much, but for larger apps with more complex logic, it's worth thinking
+about the project structure.
+
+One way to organize a project is to use three-layer architecture.
+
+=== Three-layer architecture
+
+The project is structured into three layers: API, Service and Integration layers.
+
+Each layer has a specific set of responsibilities that are clearly defined and easy to grasp.
+Each layer accesses the layer below it, never above it.
+Serving a request touches each layer starting from the top, traveling all the way down,
+and then resurfacing back to the topmost layer.
+
+
+=== API layer
+
+The API Layer is responsible for receiving the HTTP request and parsing the payload from it.
+This layer would then forward the payload removed of any HTTP-specific items to the following Service layer.
+
+Express.js lives only on this level. You'd have your main app.js that set up the server and individual route files.
+Route files define validations and call service layers, leaving all req and res objects behind.
+
+
+=== Service layer
+
+The Service Layer is responsible for performing business logic, i.e. making things happen.
+It's agnostic of any HTTP specific constructs, and the caller could as well as be a command-line application,
+a timer job or a test suite. Input is plain vanilla JavaScript objects instead of JSON.
+
+Services perform business logic. They validate inputs against business rules and call other services in the Service layer.
+If they need to talk to outside systems, they use the Integration layer to do that.
+
+
+=== Integration layer
+
+The code in the Integration Layer is responsible for performing I/O outside the process boundaries.
+It talks to databases and makes HTTP requests to 3rd party web APIs.
+
+Most of the contents in this layer would be higher abstraction clients.
+For example, a client handling the communication to a web API would accept vanilla objects as arguments
+and would hide the complexity of formulating an HTTP request payload and making the call.
+
+
+=== Clear responsibilities
+
+This division achieves separation of concerns. Each layer has a specific responsibility,
+and it translates well into a directory structure.
+
+image::images/image-2022-08-19-12-29-29-264.png[width=600]
+
+
+You could translate this architecture into a project structure by having a separate directory for each layer.
+
+image::images/image-2022-08-19-12-32-26-132.png[width=300]
